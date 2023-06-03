@@ -22,6 +22,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bishal.lazyreader.R
+import com.bishal.lazyreader.navigation.ReaderScreen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -44,6 +45,7 @@ fun ReaderLottieScreen(navController: NavHostController) {
 //            }else{
 //                navController.navigate(ReaderScreen.ReaderHomeScreen.name)
 //            }
+            navController.navigate(ReaderScreen.LoginScreen.name)
         }
 
         Column(modifier = Modifier.padding(1.dp),
