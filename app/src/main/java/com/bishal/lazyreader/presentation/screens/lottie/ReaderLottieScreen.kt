@@ -1,4 +1,4 @@
-package com.bishal.lazyreader.screens.lottie
+package com.bishal.lazyreader.presentation.screens.lottie
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

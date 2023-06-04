@@ -1,4 +1,4 @@
-package com.bishal.lazyreader.screens.home
+package com.bishal.lazyreader.presentation.screens.home
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

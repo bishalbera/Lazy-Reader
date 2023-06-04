@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class)
 
-package com.bishal.lazyreader.screens.login
+package com.bishal.lazyreader.presentation.screens.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,9 +36,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.bishal.lazyreader.R
-import com.bishal.lazyreader.components.EmailInput
-import com.bishal.lazyreader.components.PasswordInput
-import com.bishal.lazyreader.screens.lottie.ReaderLogo
+import com.bishal.lazyreader.presentation.common.EmailInput
+import com.bishal.lazyreader.presentation.common.PasswordInput
+import com.bishal.lazyreader.presentation.screens.lottie.ReaderLogo
 
 @Composable
 fun ReaderLoginScreen(navController: NavHostController) {
@@ -54,7 +54,7 @@ fun ReaderLoginScreen(navController: NavHostController) {
             if (showLoginForm.value) UserForm(loading = false, isCreateAccount = false){ email, password ->
 
 
-            }else{
+            } else{
                 UserForm(loading = false, isCreateAccount = true){ email, password ->
 
 

@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.bishal.lazyreader.screens.details.ReaderDetailsScreen
-import com.bishal.lazyreader.screens.home.ReaderHomeScreen
-import com.bishal.lazyreader.screens.login.ReaderLoginScreen
-import com.bishal.lazyreader.screens.lottie.ReaderLottieScreen
-import com.bishal.lazyreader.screens.search.ReaderSearchScreen
-import com.bishal.lazyreader.screens.stats.ReaderStatsScreen
-import com.bishal.lazyreader.screens.update.BookUpdateScreen
+import com.bishal.lazyreader.presentation.screens.details.ReaderDetailsScreen
+import com.bishal.lazyreader.presentation.screens.home.ReaderHomeScreen
+import com.bishal.lazyreader.presentation.screens.login.ReaderLoginScreen
+import com.bishal.lazyreader.presentation.screens.lottie.ReaderLottieScreen
+import com.bishal.lazyreader.presentation.screens.search.ReaderSearchScreen
+import com.bishal.lazyreader.presentation.screens.stats.ReaderStatsScreen
+import com.bishal.lazyreader.presentation.screens.update.BookUpdateScreen
 
 @Composable
 fun ReaderNavigation() {

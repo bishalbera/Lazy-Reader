@@ -1,8 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.bishal.lazyreader.components
+package com.bishal.lazyreader.presentation.common
 
-import android.opengl.Visibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -112,7 +111,7 @@ fun PasswordInput(
             imeAction = imeAction
             ),
         visualTransformation = visualTransformation,
-        trailingIcon = {PasswordVisibility(passwordVisibility = passwordVisibility)},
+        trailingIcon = { PasswordVisibility(passwordVisibility = passwordVisibility) },
         keyboardActions = onAction
     )
 }
