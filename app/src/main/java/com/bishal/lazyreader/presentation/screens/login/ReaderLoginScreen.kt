@@ -34,14 +34,17 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.bishal.lazyreader.R
+import com.bishal.lazyreader.navigation.ReaderScreen
 import com.bishal.lazyreader.presentation.common.EmailInput
 import com.bishal.lazyreader.presentation.common.PasswordInput
 import com.bishal.lazyreader.presentation.screens.lottie.ReaderLogo
 
 @Composable
-fun ReaderLoginScreen(navController: NavHostController) {
+fun ReaderLoginScreen(navController: NavController,
+                    viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel() ) {
 
     val showLoginForm = rememberSaveable { mutableStateOf(true) }
 
@@ -52,11 +55,15 @@ fun ReaderLoginScreen(navController: NavHostController) {
         ) {
             ReaderLogo()
             if (showLoginForm.value) UserForm(loading = false, isCreateAccount = false){ email, password ->
-
+                viewModel.signInWithEmailAndPassword( email, password) {
+                    navController.navigate(ReaderScreen.ReaderHomeScreen.name)
+                }
 
             } else{
                 UserForm(loading = false, isCreateAccount = true){ email, password ->
-
+                    viewModel.createUserWithEmailAndPassword( email, password) {
+                        navController.navigate(ReaderScreen.ReaderHomeScreen.name)
+                    }
 
                 }
             }

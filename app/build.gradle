@@ -53,6 +53,7 @@ dependencies {
 
     //appwrite
     implementation("io.appwrite:sdk-for-android:2.0.0")
+
     //navigation animation
 
     implementation 'androidx.navigation:navigation-compose:2.4.0-alpha05'
