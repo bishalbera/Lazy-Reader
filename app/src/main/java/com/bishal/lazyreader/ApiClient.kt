@@ -7,10 +7,8 @@ import io.appwrite.Client
 object ApiClient {
     fun createClient(context: Context): Client {
 
-        val client = Client(context = context)
+        return Client(context = context)
             .setEndpoint(Constants.appwrite_Endpoint)
             .setProject(Constants.project_Id)
-
-        return client
     }
 }
