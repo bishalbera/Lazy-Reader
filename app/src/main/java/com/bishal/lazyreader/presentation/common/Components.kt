@@ -3,7 +3,6 @@
 package com.bishal.lazyreader.presentation.common
 
 import android.app.Application
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,7 +47,6 @@ import androidx.navigation.NavController
 import com.bishal.lazyreader.ApiClient
 import com.bishal.lazyreader.navigation.ReaderScreen
 import com.bishal.lazyreader.presentation.screens.login.signOut
-import io.appwrite.Client
 import kotlinx.coroutines.launch
 
 @Composable
@@ -233,9 +231,4 @@ fun ReaderAppBar(
         modifier = Modifier.background(Color.Transparent))
 
 }
-@Composable
-fun createClient(context: Context, endpoint: String, projectId: String): Client {
-    return Client(context = context)
-        .setEndpoint(endpoint)
-        .setProject(projectId)
-}
+

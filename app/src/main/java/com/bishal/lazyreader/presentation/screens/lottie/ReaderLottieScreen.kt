@@ -12,23 +12,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.bishal.lazyreader.ApiClient
 import com.bishal.lazyreader.R
 import com.bishal.lazyreader.navigation.ReaderScreen
+import io.appwrite.services.Account
 import kotlinx.coroutines.delay
 
 @Composable
 fun ReaderLottieScreen(navController: NavHostController) {
 
 
+    val context = LocalContext.current
+
+    val client = remember {
+        ApiClient.createClient(context)
+    }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie))
 
@@ -41,12 +50,12 @@ fun ReaderLottieScreen(navController: NavHostController) {
         LaunchedEffect(Unit) {
             delay(7000)
 
-//            if (Account(client).getSession()){
-//                navController.navigate(ReaderScreen.LoginScreen.name)
-//            }else{
-//                navController.navigate(ReaderScreen.ReaderHomeScreen.name)
-//            }
-            navController.navigate(ReaderScreen.LoginScreen.name)
+            if (Account(client).get().email.isEmpty()){
+                navController.navigate(ReaderScreen.LoginScreen.name)
+            }else{
+                navController.navigate(ReaderScreen.ReaderHomeScreen.name)
+            }
+           // navController.navigate(ReaderScreen.LoginScreen.name)
         }
 
         Column(modifier = Modifier.padding(1.dp),
