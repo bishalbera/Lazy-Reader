@@ -2,6 +2,7 @@
 
 package com.bishal.lazyreader.presentation.screens.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,17 +31,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.bishal.lazyreader.R
 import com.bishal.lazyreader.navigation.ReaderScreen
 import com.bishal.lazyreader.presentation.common.EmailInput
 import com.bishal.lazyreader.presentation.common.PasswordInput
-import com.bishal.lazyreader.presentation.screens.lottie.ReaderLogo
 
 @Composable
 fun ReaderLoginScreen(navController: NavController,
@@ -48,12 +51,33 @@ fun ReaderLoginScreen(navController: NavController,
 
     val showLoginForm = rememberSaveable { mutableStateOf(true) }
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+
+    val background = painterResource(id = R.drawable.background)
+
+    Surface(modifier = Modifier
+        .fillMaxSize()
+        .background(
+            Brush.verticalGradient(
+                listOf(Color.Transparent, Color.Black),
+                startY = 0f,
+                endY = 800f
+            )
+        )
+    
+    ) {
+        Image(
+            painter = background,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds
+        )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.Center,
         ) {
-            ReaderLogo()
+
+
+
             if (showLoginForm.value) UserForm(loading = false, isCreateAccount = false){ email, password ->
                 viewModel.signInWithEmailAndPassword( email, password) {
                     navController.navigate(ReaderScreen.ReaderHomeScreen.name)
@@ -73,7 +97,7 @@ fun ReaderLoginScreen(navController: NavController,
         Row(
             modifier = Modifier.padding(15.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Bottom
         ) {
             val text = if (showLoginForm.value) "Sign Up" else "Log in"
             Text(text = "New User?")
@@ -85,7 +109,7 @@ fun ReaderLoginScreen(navController: NavController,
                     }
                     .padding(start = 5.dp),
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.tertiary
             )
 
         }
@@ -111,8 +135,11 @@ fun UserForm(
     
     val modifier = Modifier
         .height(250.dp)
-        .background(MaterialTheme.colorScheme.background)
+        .background(Color.Transparent)
         .verticalScroll(rememberScrollState())
+        Alignment.CenterVertically
+
+
     
     Column(modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -168,6 +195,7 @@ fun SubmitButton(
         if (loading) CircularProgressIndicator(modifier = Modifier.size(25.dp))
         else Text(
             text = textID,
+            color = Color(0xff45271D),
             modifier = Modifier
                 .padding(5.dp)
         )
