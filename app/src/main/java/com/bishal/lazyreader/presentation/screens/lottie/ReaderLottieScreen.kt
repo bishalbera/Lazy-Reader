@@ -29,6 +29,7 @@ import kotlinx.coroutines.delay
 fun ReaderLottieScreen(navController: NavHostController) {
 
 
+
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie))
 
 
@@ -40,7 +41,7 @@ fun ReaderLottieScreen(navController: NavHostController) {
         LaunchedEffect(Unit) {
             delay(7000)
 
-//            if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+//            if (Account(client).getSession()){
 //                navController.navigate(ReaderScreen.LoginScreen.name)
 //            }else{
 //                navController.navigate(ReaderScreen.ReaderHomeScreen.name)

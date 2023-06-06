@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.bishal.lazyreader.ApiClient
 import com.bishal.lazyreader.domain.model.MUser
 import com.bishal.lazyreader.util.Constants
 import io.appwrite.Client
@@ -23,9 +24,7 @@ import kotlin.coroutines.cancellation.CancellationException
 class LoginScreenViewModel( application: Application) : AndroidViewModel(application) {
 
 
-    private val client = Client(context = application)
-        .setEndpoint(Constants.appwrite_Endpoint)
-        .setProject(Constants.project_Id)
+    private val client: Client = ApiClient.createClient(context = application)
 
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
@@ -101,5 +100,7 @@ class LoginScreenViewModel( application: Application) : AndroidViewModel(applica
             Log.e("Appwrite", "Error: " + e.message, e)
         }
     }
+
+
 }
 

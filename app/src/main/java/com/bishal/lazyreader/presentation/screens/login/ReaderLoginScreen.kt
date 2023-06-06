@@ -2,6 +2,7 @@
 
 package com.bishal.lazyreader.presentation.screens.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -117,6 +118,7 @@ fun ReaderLoginScreen(navController: NavController,
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun UserForm(
     loading: Boolean = false,

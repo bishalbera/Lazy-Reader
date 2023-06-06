@@ -2,29 +2,54 @@
 
 package com.bishal.lazyreader.presentation.common
 
+import android.app.Application
+import android.content.Context
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.bishal.lazyreader.ApiClient
+import com.bishal.lazyreader.navigation.ReaderScreen
+import com.bishal.lazyreader.presentation.screens.login.signOut
+import io.appwrite.Client
+import kotlinx.coroutines.launch
 
 @Composable
 fun EmailInput(
@@ -93,6 +118,7 @@ fun InputField(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordInput(
     modifier: Modifier,
@@ -146,50 +172,70 @@ fun PasswordVisibility(passwordVisibility: MutableState<Boolean>) {
     }
 }
 
-//@Composable
-//fun ReaderAppBar(
-//    title: String,
-//    icon: ImageVector? = null,
-//    showProfile: Boolean = true,
-//    navController: NavController,
-//    onBackArrowClicked:() -> Unit = {}
-//) {
-//    TopAppBar(
-//        title = {
-//            Row( verticalAlignment = Alignment.CenterVertically) {
-//                if (showProfile) {
-//                    Icon(
-//                        imageVector = Icons.Default.Book,
-//                        contentDescription = "logo",
-//                        modifier = Modifier
-//                            .clip(RoundedCornerShape(12.dp))
-//                            .scale(0.9f)
-//                    )
-//                }
-//                if (icon != null) {
-//                    Icon(
-//                        imageVector = icon,
-//                        contentDescription = "arrowback",
-//                        tint = Color.Red.copy(alpha = 0.7f),
-//                        modifier = Modifier
-//                            .clickable { onBackArrowClicked.invoke() }
-//                    )
-//                }
-//                Spacer(modifier = Modifier.width(40.dp))
-//                Text(text = title,
-//                    color = Color.Red.copy(alpha = 0.7f),
-//                    style = TextStyle(fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp))
-//
-//    }},
-//    actions = {
-//        val account = Account(client = )
-//        IconButton(onClick = { Account(client = ) }) {
-//
-//        }
-//
-//    }) {
-//
-//    }
-//
-//}
+@Composable
+fun ReaderAppBar(
+    title: String,
+    icon: ImageVector? = null,
+    showProfile: Boolean = true,
+    navController: NavController,
+    application: Application? = null,
+    onBackArrowClicked:() -> Unit = {}
+) {
+    val client = ApiClient.createClient(context = application!!)
+    val coroutineScope = rememberCoroutineScope()
+    TopAppBar(
+        title = {
+            Row( verticalAlignment = Alignment.CenterVertically) {
+                if (showProfile) {
+                    Icon(
+                        imageVector = Icons.Default.Book,
+                        contentDescription = "logo",
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .scale(0.9f)
+                    )
+                }
+                if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = "arrowBack",
+                        tint = Color.Red.copy(alpha = 0.7f),
+                        modifier = Modifier
+                            .clickable { onBackArrowClicked.invoke() }
+                    )
+                }
+                Spacer(modifier = Modifier.width(40.dp))
+                Text(text = title,
+                    color = Color.Red.copy(alpha = 0.7f),
+                    style = TextStyle(fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp))
+
+    }},
+    actions = {
+        if (application != null) { // Check if the application parameter is not null
+            IconButton(
+                onClick = {
+                    coroutineScope.launch {
+                        signOut(client )
+                        navController.navigate(ReaderScreen.LoginScreen.name)
+                    }
+                }
+            ) {
+                if (showProfile) Row() {
+                    Icon(
+                        imageVector = Icons.Filled.Logout,
+                        contentDescription = "log out"
+                    )
+                } else Box {}
+            }
+        }
+    },
+        modifier = Modifier.background(Color.Transparent))
+
+}
+@Composable
+fun createClient(context: Context, endpoint: String, projectId: String): Client {
+    return Client(context = context)
+        .setEndpoint(endpoint)
+        .setProject(projectId)
+}
