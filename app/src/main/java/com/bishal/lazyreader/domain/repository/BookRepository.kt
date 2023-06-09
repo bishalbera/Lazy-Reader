@@ -18,7 +18,7 @@ class BookRepository @Inject constructor(private val api: BooksApi) {
             Resource.Success(data = itemList)
 
         }catch (e: Exception) {
-            Log.d("repository", "getooks: Failed ${e.message.toString()}")
+            Log.d("repository", "getbooks: Failed ${e.message.toString()}")
             Resource.Error(message = e.message.toString())
         }
 
