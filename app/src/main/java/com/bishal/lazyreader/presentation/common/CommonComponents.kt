@@ -85,14 +85,9 @@ fun InputField(
         value = valueState.value,
         onValueChange = {valueState.value = it},
         label = { Text(text = labelId)},
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = Color.Transparent,
-            cursorColor = Color(0xFFE69360),
-            textColor = Color(0xFFE69360),
-            disabledBorderColor = Color(0xFF203226),
-            focusedBorderColor = Color(0xFF203226),
-            focusedLabelColor = Color(0xFFE69360),
-            unfocusedLabelColor = Color(0xFFE69360)
+        colors = TextFieldDefaults.colors(
+
+
 
 
         ),
@@ -136,7 +131,7 @@ fun PasswordInput(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             containerColor = Color.Transparent,
             cursorColor = Color(0xFFE69360),
-            textColor = Color(0xFFE69360),
+
             disabledBorderColor = Color(0xFF203226),
             focusedBorderColor = Color(0xFF203226),
             focusedLabelColor = Color(0xFFE69360),
