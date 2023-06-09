@@ -3,7 +3,6 @@
 package com.bishal.lazyreader.presentation.screens.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bishal.lazyreader.domain.model.MBook
 import com.bishal.lazyreader.navigation.BottomBar
-import com.bishal.lazyreader.navigation.ReaderScreen
 import com.bishal.lazyreader.presentation.common.ReaderAppBar
+import com.bishal.lazyreader.presentation.components.ListCard
 import com.bishal.lazyreader.presentation.components.TitleSection
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -120,8 +119,8 @@ fun BookListArea(
 
    }
     HorizontalScrollableComponent(addedBooks){
-        Log.d("TAG", "BookListArea: $it")
-        navController.navigate(ReaderScreen.UpdateScreen.name + "/$it")
+//        Log.d("TAG", "BookListArea: $it")
+//        navController.navigate(ReaderScreen.UpdateScreen.name + "/$it")
     }
 }
 
@@ -152,6 +151,9 @@ fun HorizontalScrollableComponent(
             }
         } else{
             for (book in listOfBooks) {
+                ListCard(book ) {
+                    onCardPressed()
+                }
 
             }
         }
