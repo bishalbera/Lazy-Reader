@@ -2,6 +2,9 @@
 
 package com.bishal.lazyreader.presentation.screens.details
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +35,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -53,7 +59,16 @@ import com.bishal.lazyreader.data.Resource
 import com.bishal.lazyreader.domain.model.Item
 import com.bishal.lazyreader.domain.model.MBook
 import com.bishal.lazyreader.presentation.common.RoundedButton
+import com.bishal.lazyreader.util.Constants
+import io.appwrite.Client
+import io.appwrite.ID
+import io.appwrite.exceptions.AppwriteException
 import io.appwrite.services.Account
+import io.appwrite.services.Databases
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @Composable
 fun ReaderDetailsScreen(
@@ -87,13 +102,11 @@ fun ReaderDetailsScreen(
         },
         content = {
             BackgroundContent(
-                boookImage = bookInfo.data?.volumeInfo?.imageLinks?.thumbnail,
                 imageFraction = currentSheetFraction,
-                bookInfo = bookInfo,
-                onCloseClicked = {
-                    navController.popBackStack()
-                }
-            )
+                bookInfo = bookInfo
+            ) {
+                navController.popBackStack()
+            }
         }
     )
 
@@ -220,10 +233,16 @@ fun ShowBookDetails(
             val client = remember {
                 ApiClient.createClient(context)
             }
-            var userID: String = ""
-            LaunchedEffect(key1 = Unit) {
-                val Id = Account(client = client).get().id
-                userID = Id
+            var userID by remember { mutableStateOf("") }
+            LaunchedEffect(key1 = client) {
+                try {
+                    val id = Account(client = client).get().id
+                    userID = id
+                } catch (e: AppwriteException) {
+                    Log.e("Appwrite", "Error getting user ID: ${e.message}")
+                }
+
+
 
             }
             //Buttons
@@ -240,9 +259,11 @@ fun ShowBookDetails(
                         photoUrl = bookData?.imageLinks?.thumbnail,
                         publishedDate = bookData?.publishedDate,
                         pageCount = bookData?.pageCount.toString(),
-                        rating = 0.0,
+                        rating = 0.0.toInt(),
                         googleBookId = googleBookId,
                         userId = userID)
+
+                    saveToAppwrite( navController = navController, context = context, book = book)
 
 
 
@@ -265,7 +286,6 @@ fun ShowBookDetails(
 
 @Composable
 fun BackgroundContent(
-    boookImage: String?,
     imageFraction: Float,
     bookInfo: Resource<Item>,
     onCloseClicked: () -> Unit,
@@ -324,4 +344,32 @@ val BottomSheetScaffoldState.currentSheetFraction: Float
         }
     }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 
+fun saveToAppwrite(book: MBook?, navController: NavController, context: Context) {
+    book?.let {
+        val client: Client = ApiClient.createClient(context = context)
+        val databases = Databases(client)
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            try {
+                val data = it.toHashMap() as Map<String, String>
+                if (data.isNotEmpty() ) {
+                    Log.d("Appwrite", "Data: $data") // debug log
+                    databases.createDocument(
+                        collectionId = Constants.bookCollection_Id,
+                        databaseId = Constants.database_Id,
+                        documentId = ID.unique(),
+                        data = data
+                    )
+                    navController.popBackStack()
+                } else {
+                    // Handle empty data here
+                    Log.e("Appwrite", "Error: data is empty")
+                }
+            } catch (e: AppwriteException) {
+                Log.e("Appwrite", "Error: " + e.message, e)
+            }
+        }
+    }
+}

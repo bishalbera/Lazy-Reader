@@ -127,7 +127,7 @@ fun ListCard(
 }
 
 @Composable
-fun BookRating(score: Double) {
+fun BookRating(score: Int) {
     Surface(modifier = Modifier
         .height(70.dp)
         .padding(4.dp),
