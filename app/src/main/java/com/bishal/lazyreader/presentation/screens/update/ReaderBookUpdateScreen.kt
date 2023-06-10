@@ -146,7 +146,7 @@ fun ShowSimpleForm(
         horizontalArrangement = Arrangement.Start
     ) {
         TextButton(
-            onClick = { },
+            onClick = { isStartedReading.value = true },
         enabled = book.startedReading == null) {
             if (book.startedReading == null) {
                 if (!isStartedReading.value) {
@@ -163,8 +163,31 @@ fun ShowSimpleForm(
             }
             
         }
+        Spacer(modifier = Modifier.height(4.dp))
+        TextButton(onClick = { isFinishedReading.value = true },
+            enabled = book.finishedReading == null) {
+            if (book.finishedReading == null) {
+                if (!isFinishedReading.value) {
+                    Text(text = "Mark as Read")
+                } else {
+                    Text(text = "Finished Reading!")
+                }
+            } else {
+                Text(text = "Finished On: ${formatDate(book.finishedReading!!)}")
+            }
+
+        }
 
         
+    }
+    Text(
+        text = "Rating", modifier = Modifier.padding(3.dp))
+    book.rating?.let {
+        RatingBar(rating = it!!){ rating->
+            ratingVal.value = rating
+            Log.d("TAG", "ShowSimpleForm: ${ratingVal.value}")
+
+        }
     }
 
 }
