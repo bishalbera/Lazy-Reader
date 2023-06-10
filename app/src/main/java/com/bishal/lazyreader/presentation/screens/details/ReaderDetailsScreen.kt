@@ -116,7 +116,6 @@ fun ReaderDetailsScreen(
 fun ShowBookDetails(
     bookInfo: Resource<Item>,
     navController: NavController,
-    //sheetBackgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
     val bookData = bookInfo.data?.volumeInfo
     val googleBookId = bookInfo.data?.id
