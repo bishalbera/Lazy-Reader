@@ -23,12 +23,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,6 +45,7 @@ import com.bishal.lazyreader.data.DataOrException
 import com.bishal.lazyreader.domain.model.MBook
 import com.bishal.lazyreader.presentation.common.ReaderAppBar
 import com.bishal.lazyreader.presentation.screens.home.HomeScreenViewModel
+import com.bishal.lazyreader.util.formatDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -110,6 +117,55 @@ Scaffold(
     }
 
 }
+
+}
+
+@Composable
+fun ShowSimpleForm(
+    book: MBook,
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+
+    val notesText = remember { mutableStateOf("") }
+
+    val isStartedReading = remember { mutableStateOf(false) }
+
+    val isFinishedReading = remember { mutableStateOf(false) }
+
+    val ratingVal = remember { mutableStateOf(0) }
+
+    SimpleForm(defaultValue = book.notes.toString().ifEmpty { "No thoughts available :(" }){ note ->
+        notesText.value = note
+
+    }
+    
+    Row(
+        modifier = Modifier.padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        TextButton(
+            onClick = { },
+        enabled = book.startedReading == null) {
+            if (book.startedReading == null) {
+                if (!isStartedReading.value) {
+                    Text(text = "Started Reading")
+                } else {
+                    Text(
+                        text = "Started Reading!",
+                        modifier = Modifier.alpha(0.6f),
+                        color = Color.Red.copy(alpha = 0.5f)
+                    )
+                }
+            } else {
+                Text(text = "Started On: ${formatDate(book.startedReading!!)}")
+            }
+            
+        }
+
+        
+    }
 
 }
 
@@ -192,8 +248,6 @@ fun CardListItem(
             }
 
         }
-
-
 
 
     }
