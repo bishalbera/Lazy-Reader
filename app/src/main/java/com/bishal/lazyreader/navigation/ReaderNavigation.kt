@@ -74,8 +74,14 @@ fun ReaderNavigation() {
 
         }
 
-        composable(ReaderScreen.UpdateScreen.name) {
-            BookUpdateScreen(navController = navController)
+        val updateName = ReaderScreen.UpdateScreen.name
+        composable("$updateName/{bookItemId}", arguments = listOf(navArgument("bookItemId") {
+            type = NavType.StringType
+        })) { navBackStackEntry ->
+            navBackStackEntry.arguments?.getString("bookItemId").let {
+                BookUpdateScreen(navController = navController, bookItemId = it.toString())
+            }
+
         }
     }
 }
