@@ -118,9 +118,11 @@ fun ShowBookDetails(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Brush.verticalGradient(
-                   colors = brushColor, startY = 30f, endY = 430f
-                )),
+                .background(
+                    Brush.verticalGradient(
+                        colors = brushColor, startY = 30f, endY = 830f
+                    )
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -323,22 +325,3 @@ val BottomSheetScaffoldState.currentSheetFraction: Float
     }
 
 
-suspend fun SaveToAppwrite(
-    book: MBook,
-    navController: NavController
-) {
-
-
-   // val databases = Databases(client)
-
-//    try {
-//        val document = databases.createDocument(
-//            databaseId = Constants.database_Id,
-//            collectionId = Constants.bookCollection_Id,
-//            documentId = ID.unique(),
-//            data = book
-//        )
-//    }
-
-
-}
