@@ -4,10 +4,13 @@ package com.bishal.lazyreader.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -228,6 +232,32 @@ fun ReaderAppBar(
 
     },
         modifier = Modifier.background(Color.Transparent))
+
+}
+
+@Composable
+fun RoundedButton(
+    label: String = "Reading",
+    radius: Int = 29,
+    onPress: () -> Unit = {}) {
+    Surface(modifier = Modifier.clip(RoundedCornerShape(
+        bottomEndPercent = radius,
+        topStartPercent = radius)),
+        color = Color(0xFF92CBDF)) {
+
+        Column(modifier = Modifier
+            .width(90.dp)
+            .heightIn(40.dp)
+            .clickable { onPress.invoke() },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = label, style = TextStyle(color = Color.White,
+                fontSize = 15.sp),)
+
+        }
+
+    }
+
 
 }
 

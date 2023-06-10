@@ -18,16 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.bishal.lazyreader.presentation.screens.details.ReaderDetailsScreen
 import com.bishal.lazyreader.presentation.screens.home.ReaderHomeScreen
 import com.bishal.lazyreader.presentation.screens.login.ReaderLoginScreen
 import com.bishal.lazyreader.presentation.screens.lottie.ReaderLottieScreen
 import com.bishal.lazyreader.presentation.screens.search.ReaderSearchScreen
+import com.bishal.lazyreader.presentation.screens.search.ReaderSearchScreenViewModel
 import com.bishal.lazyreader.presentation.screens.stats.ReaderStatsScreen
 import com.bishal.lazyreader.presentation.screens.update.BookUpdateScreen
 import com.bishal.lazyreader.ui.theme.Purple500
@@ -51,13 +55,21 @@ fun ReaderNavigation() {
             ReaderHomeScreen(navController = navController)
         }
         composable(ReaderScreen.ReaderStatsScreen.name) {
+
             ReaderStatsScreen(navController = navController)
         }
         composable(ReaderScreen.SearchScreen.name) {
-            ReaderSearchScreen(navController = navController)
+            val searchViewModel = hiltViewModel<ReaderSearchScreenViewModel>()
+            ReaderSearchScreen(navController = navController, viewModel = searchViewModel)
         }
-        composable(ReaderScreen.DetailScreen.name) {
-            ReaderDetailsScreen(navController = navController)
+        val detailName = ReaderScreen.DetailScreen.name
+        composable("$detailName/{bookId}", arguments = listOf(navArgument("bookId"){
+            type = NavType.StringType
+        })) {backStackEntry ->
+            backStackEntry.arguments?.getString("bookId").let {
+                ReaderDetailsScreen(navController = navController, bookId = it.toString())
+            }
+
         }
         composable(ReaderScreen.UpdateScreen.name) {
             BookUpdateScreen(navController = navController)

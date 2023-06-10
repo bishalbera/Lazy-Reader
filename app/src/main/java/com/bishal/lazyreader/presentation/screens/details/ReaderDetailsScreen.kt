@@ -31,11 +31,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -44,14 +48,19 @@ import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.bishal.lazyreader.ApiClient
 import com.bishal.lazyreader.data.Resource
 import com.bishal.lazyreader.domain.model.Item
+import com.bishal.lazyreader.domain.model.MBook
+import com.bishal.lazyreader.presentation.common.RoundedButton
+import io.appwrite.services.Account
 
 @Composable
 fun ReaderDetailsScreen(
     navController: NavController,
     viewModel: ReaderDetailViewModel = hiltViewModel(),
-    bookId: String
+    bookId: String,
+
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
@@ -94,26 +103,31 @@ fun ReaderDetailsScreen(
 fun ShowBookDetails(
     bookInfo: Resource<Item>,
     navController: NavController,
-    sheetBackgroundColor: Color = MaterialTheme.colorScheme.surface
+    //sheetBackgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
     val bookData = bookInfo.data?.volumeInfo
     val googleBookId = bookInfo.data?.id
+    val brushColor: List<Color> = listOf( Color(0xff227C70),
+        Color(0xffC92C6D))
 
     Surface(modifier = Modifier
         .fillMaxWidth()
+
 
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(sheetBackgroundColor),
+                .background(Brush.verticalGradient(
+                   colors = brushColor, startY = 30f, endY = 430f
+                )),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = bookData?.title.toString(),
                 style = MaterialTheme.typography.headlineMedium,
-              //  color = contentColor,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 5
@@ -122,13 +136,13 @@ fun ShowBookDetails(
                 text = "Authors: ${bookData?.authors.toString()}",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
-               // color = contentColor
+                color = MaterialTheme.colorScheme.background
             )
             Text(
                 text = "Published On: ${bookData?.publishedDate.toString()}",
                 style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Thin,
-              //  color = contentColor
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onBackground
             )
 
 
@@ -150,13 +164,13 @@ fun ShowBookDetails(
                     Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = "star",
-                       // tint = iconColor
+                        tint = Color(0xffFFD93D)
 
                     )
                     Text(text = bookData?.averageRating.toString(),
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
-                       // color = contentColor
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
 
                     Spacer(modifier = Modifier.width(15.dp))
@@ -165,7 +179,7 @@ fun ShowBookDetails(
                     Text(text = "PageCount: ${bookData?.pageCount.toString()}",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,
-                       // color = contentColor
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
 
                     Spacer(modifier = Modifier.width(15.dp))
@@ -175,7 +189,7 @@ fun ShowBookDetails(
                         maxLines = 1,
                         fontSize = 12.sp,
                         overflow = TextOverflow.Ellipsis,
-                       // color = contentColor
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
 
                 }
@@ -188,7 +202,6 @@ fun ShowBookDetails(
             Text(
                 text = "Description:",
                 fontWeight = FontWeight.Bold,
-                //color = contentColor,
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(top = 12.dp, start = 12.dp, end = 12.dp))
@@ -198,9 +211,19 @@ fun ShowBookDetails(
                     .padding(12.dp),
                 maxLines = 10,
                 overflow = TextOverflow.Ellipsis,
-               // color = contentColor
             )
 
+            val context = LocalContext.current
+
+            val client = remember {
+                ApiClient.createClient(context)
+            }
+            var userID: String = ""
+            LaunchedEffect(key1 = Unit) {
+                val Id = Account(client = client).get().id
+                userID = Id
+
+            }
             //Buttons
             Row(modifier = Modifier.padding(top = 6.dp, bottom = 6.dp),
                 horizontalArrangement = Arrangement.SpaceAround) {
@@ -217,9 +240,9 @@ fun ShowBookDetails(
                         pageCount = bookData?.pageCount.toString(),
                         rating = 0.0,
                         googleBookId = googleBookId,
-                        userId = FirebaseAuth.getInstance().currentUser?.uid.toString())
+                        userId = userID)
 
-                    saveToAppwriteDatabase(book, navController = navController)
+
 
                 }
                 Spacer(modifier = Modifier.width(25.dp))
@@ -278,7 +301,7 @@ fun BackgroundContent(
                         .size(32.dp),
                     imageVector = Icons.Default.Close,
                     contentDescription = "close",
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onTertiary
                 )
 
             }
@@ -298,3 +321,24 @@ val BottomSheetScaffoldState.currentSheetFraction: Float
             else -> 1f - progress
         }
     }
+
+
+suspend fun SaveToAppwrite(
+    book: MBook,
+    navController: NavController
+) {
+
+
+   // val databases = Databases(client)
+
+//    try {
+//        val document = databases.createDocument(
+//            databaseId = Constants.database_Id,
+//            collectionId = Constants.bookCollection_Id,
+//            documentId = ID.unique(),
+//            data = book
+//        )
+//    }
+
+
+}

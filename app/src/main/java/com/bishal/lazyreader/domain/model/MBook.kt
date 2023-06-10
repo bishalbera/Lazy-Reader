@@ -16,4 +16,5 @@ data class MBook(
     var startedReading: Timestamp? = null,
     var finishedReading: String? = null,
     var userId: String? = null,
+    var googleBookId: String? = null
 )
