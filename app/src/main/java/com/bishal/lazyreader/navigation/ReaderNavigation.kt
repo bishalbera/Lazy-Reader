@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.bishal.lazyreader.presentation.screens.details.ReaderDetailsScreen
+import com.bishal.lazyreader.presentation.screens.home.HomeScreenViewModel
 import com.bishal.lazyreader.presentation.screens.home.ReaderHomeScreen
 import com.bishal.lazyreader.presentation.screens.login.ReaderLoginScreen
 import com.bishal.lazyreader.presentation.screens.lottie.ReaderLottieScreen
@@ -52,7 +53,8 @@ fun ReaderNavigation() {
             ReaderLoginScreen(navController = navController)
         }
         composable(ReaderScreen.ReaderHomeScreen.name) {
-            ReaderHomeScreen(navController = navController)
+            val homeViewModel = hiltViewModel<HomeScreenViewModel>()
+            ReaderHomeScreen(navController = navController, viewModel = homeViewModel)
         }
         composable(ReaderScreen.ReaderStatsScreen.name) {
 
@@ -71,6 +73,7 @@ fun ReaderNavigation() {
             }
 
         }
+
         composable(ReaderScreen.UpdateScreen.name) {
             BookUpdateScreen(navController = navController)
         }

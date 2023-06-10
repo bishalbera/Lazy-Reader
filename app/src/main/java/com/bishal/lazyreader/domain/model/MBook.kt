@@ -25,10 +25,10 @@ data class MBook(
             "notes" to this.notes,
             "photo-Url" to this.photoUrl,
             "categories" to this.categories,
-            "published-Date" to this.publishedDate, //convert date to Long (timestamp)
-            "rating" to this.rating, // cast Double? to Double, with default of 0.0
+            "published-Date" to this.publishedDate,
+            "rating" to this.rating,
             "description" to this.description,
-            "page-Count" to this.pageCount, // cast Int? to Int, with default of 0
+            "page-Count" to this.pageCount,
             "started-Reading" to this.startedReading?.time, //convert date to Long (timestamp)
             "finished-Reading" to this.finishedReading?.time, //convert date to Long (timestamp)
             "user-Id" to this.userId,
