@@ -2,24 +2,39 @@ package com.bishal.lazyreader.presentation.screens.update
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.bishal.lazyreader.data.DataOrException
 import com.bishal.lazyreader.domain.model.MBook
 import com.bishal.lazyreader.presentation.common.ReaderAppBar
@@ -95,5 +110,92 @@ Scaffold(
     }
 
 }
+
+}
+
+@Composable
+fun ShowBookUpdate(
+    bookInfo: DataOrException<List<MBook>, Boolean, Exception>,
+    bookItemId: String
+) {
+    Row() {
+        Spacer(modifier = Modifier.width(43.dp))
+        if (bookInfo.data != null) {
+            val matchingBook = bookInfo.data!!.find { mBook ->
+                mBook.googleBookId == bookItemId
+            }
+
+            if (matchingBook != null) {
+                Column(
+                    modifier = Modifier.padding(4.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    CardListItem(book = matchingBook, onPressDetails = {})
+                }
+            } else {
+
+            }
+        }
+    }
+
+}
+
+@Composable
+fun CardListItem(
+    book: MBook,
+    onPressDetails: () -> Unit
+) {
+    Card(modifier = Modifier
+        .padding(
+            start = 4.dp, end = 4.dp, top = 4.dp, bottom = 8.dp
+        )
+        .clip(RoundedCornerShape(20.dp))
+        .clickable { },
+    ) {
+        Row(horizontalArrangement = Arrangement.Start) {
+            Image(painter = rememberAsyncImagePainter(model = book.photoUrl.toString()),
+                contentDescription = null ,
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(120.dp)
+                    .padding(4.dp)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 120.dp, topEnd = 20.dp, bottomEnd = 0.dp, bottomStart = 0.dp
+                        )
+                    ))
+            Column {
+                Text(text = book.title.toString(),
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .width(120.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis)
+
+                Text(text = book.authors.toString(),
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(start = 8.dp,
+                        end = 8.dp,
+                        top = 2.dp,
+                        bottom = 0.dp))
+
+                Text(text = book.publishedDate.toString(),
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(start = 8.dp,
+                        end = 8.dp,
+                        top = 0.dp,
+                        bottom = 8.dp))
+
+            }
+
+        }
+
+
+
+
+    }
 
 }
