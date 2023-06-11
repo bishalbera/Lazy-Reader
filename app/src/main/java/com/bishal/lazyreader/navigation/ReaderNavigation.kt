@@ -1,5 +1,7 @@
 package com.bishal.lazyreader.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +39,7 @@ import com.bishal.lazyreader.presentation.screens.stats.ReaderStatsScreen
 import com.bishal.lazyreader.presentation.screens.update.BookUpdateScreen
 import com.bishal.lazyreader.ui.theme.Purple500
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReaderNavigation() {
     val navController = rememberNavController()

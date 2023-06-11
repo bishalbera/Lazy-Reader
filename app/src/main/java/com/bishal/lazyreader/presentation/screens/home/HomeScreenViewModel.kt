@@ -13,13 +13,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(private val repository: AppwriteRepository, ): ViewModel() {
+class HomeScreenViewModel @Inject constructor(private val repository: AppwriteRepository) : ViewModel() {
 
-
-
-
-    val data: MutableState<DataOrException<List<MBook>, Boolean, Exception>>
-    = mutableStateOf(DataOrException(listOf(), true,Exception("")))
+    val data: MutableState<DataOrException<List<MBook>, Boolean, Exception>> = mutableStateOf(
+        DataOrException(
+            data = emptyList(),
+            loading = true,
+            e = null
+        )
+    )
 
     init {
         getAllBooksFromDatabase()
@@ -27,12 +29,13 @@ class HomeScreenViewModel @Inject constructor(private val repository: AppwriteRe
 
     private fun getAllBooksFromDatabase() {
         viewModelScope.launch {
-            data.value.loading = true
-            repository.getAllBooksFromDatabase( ).collect { result ->
+            repository.getAllBooksFromDatabase().collect { result ->
                 data.value = result
-                if (!data.value.data.isNullOrEmpty()) data.value.loading = false
+                if (!data.value.data.isNullOrEmpty()) {
+                    data.value.loading = false
+                }
+                Log.d("GET", "getAllBooksFromDatabase: ${data.value.data?.toList()}")
             }
         }
-        Log.d("GET", "getAllBooksFromDatabase: ${data.value.data?.toList().toString()}")
     }
 }

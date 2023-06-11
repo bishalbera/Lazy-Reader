@@ -102,14 +102,16 @@ fun HomeContent(
         }
     }
     var listOfBooks = listOf<MBook>()
-
     if (!viewModel.data.value.data.isNullOrEmpty()) {
-        listOfBooks = viewModel.data.value.data!!.toList().filter { mBook ->
-        mBook.userId == userID
+        listOfBooks = viewModel.data.value.data!!.filter { mBook ->
+            mBook.userId == userID
+
 
         }
         Log.d("Books", "Homecontent: $listOfBooks")
     }
+
+
 
 
 
@@ -180,7 +182,7 @@ fun HorizontalScrollableComponent(
         if (viewModel.data.value.loading == true) {
             LinearProgressIndicator()
         }else{
-            if (listOfBooks.isNullOrEmpty()) {
+            if (listOfBooks.isEmpty()) {
                 Surface(modifier = Modifier.padding(23.dp)) {
                     Text(text = "No books found, Add a book",
                         style = TextStyle(color = Color.Red.copy(alpha = 0.4f),
